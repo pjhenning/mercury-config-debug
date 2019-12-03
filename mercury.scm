@@ -31,7 +31,7 @@
       (list "readline" readline)
     ))
     (arguments (list
-      #:config-flags (list "--disable-most-grades")
+      #:configure-flags (list "--disable-most-grades")
     ))
     (synopsis "The Mercury programming language")
     (description 
