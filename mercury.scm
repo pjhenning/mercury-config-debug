@@ -36,7 +36,11 @@
         (modify-phases %standard-phases
            (add-after 'unpack 'fix-hardcoded-paths
              (lambda _
-               (substitute* "tests/repo/init.c"
+               (substitute* "bindist/bindist.Makefile"
+                 (("/bin/sh") (string-append "" (which "sh"))))
+               (substitute* "tests/benchmarks/Makefile.mercury"
+                 (("/bin/sh") (string-append "" (which "sh"))))
+               (substitute* "scripts/Mmake.vars.in"
                  (("/bin/sh") (string-append "" (which "sh"))))
              #t)
             )
