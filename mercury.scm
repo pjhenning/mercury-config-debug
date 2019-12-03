@@ -50,6 +50,8 @@
                  (("/bin/sh") (string-append "" (which "sh"))))
                (substitute* "boehm_gc/Makefile.direct"
                  (("/bin/sh") (string-append "" (which "sh"))))
+               (substitute* "configure"
+                 (("${CONFIG_SHELL-/bin/sh}") (string-append "" (which "sh"))))
              #t)
             )
         )
