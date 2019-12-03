@@ -38,9 +38,17 @@
              (lambda _
                (substitute* "bindist/bindist.Makefile"
                  (("/bin/sh") (string-append "" (which "sh"))))
+               (substitute* "bindist/bindist.Makefile.in"
+                 (("/bin/sh") (string-append "" (which "sh"))))
                (substitute* "tests/benchmarks/Makefile.mercury"
                  (("/bin/sh") (string-append "" (which "sh"))))
                (substitute* "scripts/Mmake.vars.in"
+                 (("/bin/sh") (string-append "" (which "sh"))))
+               (substitute* "boehm_gc/PCR-Makefile"
+                 (("/bin/sh") (string-append "" (which "sh"))))
+               (substitute* "boehm_gc/Makefile.dj"
+                 (("/bin/sh") (string-append "" (which "sh"))))
+               (substitute* "boehm_gc/Makefile.direct"
                  (("/bin/sh") (string-append "" (which "sh"))))
              #t)
             )
