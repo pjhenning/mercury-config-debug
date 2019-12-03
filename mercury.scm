@@ -2,7 +2,12 @@
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix build-system gnu)
-  #:use-module (guix download))
+  #:use-module (guix download)
+  #:use-module (gnu packages bison)
+  #:use-module (gnu packages flex)
+  #:use-module (gnu packages texinfo)
+  #:use-module (gnu packages readline)
+)
 
 (define-public mercury
   (package
@@ -19,6 +24,12 @@
               )
     ))
     (build-system gnu-build-system)
+    (native-inputs (list
+      (list "bison" bison)
+      (list "flex" flex)
+      (list "texinfo" texinfo)
+      (list "readline" readline)
+    ))
     (arguments (list
       #:config-flags (list "--disable-most-grades")
     ))
