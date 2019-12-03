@@ -30,8 +30,17 @@
       (list "texinfo" texinfo)
       (list "readline" readline)
     ))
-    (arguments (list
+    (arguments `(
       #:configure-flags (list "--disable-most-grades")
+      #:phases
+        (modify-phases %standard-phases
+           (add-after 'unpack 'fix-hardcoded-paths
+             (lambda _
+               (substitute* "tests/repo/init.c"
+                 (("/bin/sh") (string-append "" (which "sh"))))
+             #t)
+            )
+        )
     ))
     (synopsis "The Mercury programming language")
     (description 
