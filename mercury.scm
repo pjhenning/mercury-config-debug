@@ -51,7 +51,7 @@
                (substitute* "boehm_gc/Makefile.direct"
                  (("/bin/sh") (string-append "" (which "sh"))))
                (substitute* "configure"
-                 (("${CONFIG_SHELL-/bin/sh}") (string-append "" (which "sh"))))
+                 ('("export SHELL") (string-append "export SHELL=" (which "sh"))))
              #t)
             )
         )
