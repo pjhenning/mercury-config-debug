@@ -46,6 +46,7 @@
                                    "boehm_gc/Makefile.direct"
                                    "boehm_gc/autogen.sh"
                 ))
+                (display hcp_files)
                 (define sh_path (which "sh"))
                 (for-each 
                   (lambda hcp_file (
