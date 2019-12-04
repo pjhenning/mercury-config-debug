@@ -47,15 +47,10 @@
                                    "boehm_gc/Makefile.direct"
                                    "boehm_gc/autogen.sh"
                   ))
-                  (sh_path (which "sh"))
+                  ;(sh_path (which "sh"))
                   )
                   (
-                    (for-each 
-                      (lambda (hcp_file) (
-                        (display hcp_file)
-                      ))
-                      hcp_files
-                    )
+                    (write "wow")
                     #!(for-each 
                       (lambda (hcp_file) (
                         (substitute* hcp_file
@@ -64,8 +59,8 @@
                       )) 
                       hcp_files
                     )!#
-                    (substitute* "configure"
-                      (("export SHELL") (string-append "export CONFIG_SHELL=" sh_path "\nexport SHELL=" sh_path)))
+                    #!(substitute* "configure"
+                      (("export SHELL") (string-append "export CONFIG_SHELL=" sh_path "\nexport SHELL=" sh_path)))!#
                   )
                 )
              #t)
