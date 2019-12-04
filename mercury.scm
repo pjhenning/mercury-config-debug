@@ -60,12 +60,26 @@
                 (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
             #t)
           )
-          (add-before 'configure 'set-xv
-            (lambda _
+          (add-before 'configure 'patch-missing-if
+            (lambda _ 
               (substitute* "configure"
-                (("# Be more Bourne compatible") "set -xv\nlogfile=mcdb.log\nexec > $logfile 2>&1\n# Be more Bourne compatible"))
+                (
+                  '("    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $mercury_cv_asm_labels" >&5")
+                  '("if  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $mercury_cv_asm_labels" >&5")
+                )
+              )
             #t)
           )
+          #!(add-before 'configure 'set-xv
+            (lambda _
+              (substitute* "configure"
+                (
+                  ("# Be more Bourne compatible") 
+                  "set -xv\nlogfile=mcdb.log\nexec > $logfile 2>&1\n# Be more Bourne compatible"
+                )
+              )
+            #t)
+          )!#
         )
     ))
     (synopsis "The Mercury programming language")
