@@ -32,6 +32,7 @@
     ))
     (arguments `(
       #:configure-flags (list "--enable-libgrades=asm_fast.gc")
+      #:make-flags (list "PARALLEL=-j$NIX_BUILD_CORES")
       #:phases
         (modify-phases %standard-phases
           (add-after 'unpack 'fix-hardcoded-paths
@@ -57,6 +58,12 @@
               )
               (substitute* "configure"
                 (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
+            #t)
+          )
+          (add-before 'configure 'set-xv
+            (lambda _
+              (substitute* "configure"
+                (("# Be more Bourne compatible") "set -xv\nlogfile=mcdb.log\nexec > $logfile 2>&1\n# Be more Bourne compatible"))
             #t)
           )
         )
