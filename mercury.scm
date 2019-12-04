@@ -39,6 +39,7 @@
               (for-each 
                 write 
                 (list
+                  "Makefile"
                   "bindist/bindist.Makefile"
                   "bindist/bindist.Makefile.in"
                   "tests/benchmarks/Makefile.mercury"
