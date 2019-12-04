@@ -31,7 +31,7 @@
       (list "readline" readline)
     ))
     (arguments `(
-      #:configure-flags (list "--disable-most-grades")
+      #:configure-flags (list "--disable-most-grades" "--enable-libgrades=asm_fast.gc")
       #:phases
         (modify-phases %standard-phases
           (add-after 'unpack 'fix-hardcoded-paths
