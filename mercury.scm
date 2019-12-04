@@ -32,7 +32,7 @@
     ))
     (arguments `(
       #:configure-flags (list "--enable-libgrades=asm_fast.gc")
-      #:make-flags (list "PARALLEL=-j$NIX_BUILD_CORES")
+      ;#:make-flags (list "PARALLEL=-j$NIX_BUILD_CORES")
       #:phases
         (modify-phases %standard-phases
           (add-after 'unpack 'fix-hardcoded-paths
