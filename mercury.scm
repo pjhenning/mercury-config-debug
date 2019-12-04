@@ -34,12 +34,19 @@
       #:configure-flags (list "--disable-most-grades")
       #:phases
         (modify-phases %standard-phases
-           (add-after 'unpack 'fix-hardcoded-paths
-             (lambda _
-               (substitute* "configure"
-                  (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
-             #t)
-            )
+          (add-after 'unpack 'fix-hardcoded-paths
+            (lambda _
+              (let 
+                (
+                  (sh_loc (which "sh"))
+                )
+                (
+                  (substitute* "configure"
+                    (("export SHELL") (string-append "export CONFIG_SHELL=" sh_loc "\nexport SHELL=" sh_loc)))
+                )
+              )
+            #t)
+          )
         )
     ))
     (synopsis "The Mercury programming language")
