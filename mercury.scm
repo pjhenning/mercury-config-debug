@@ -37,7 +37,10 @@
           (add-after 'unpack 'fix-hardcoded-paths
             (lambda _
               (for-each 
-                write 
+                (lambda (hcp_file) 
+                  (substitute* hcp_file
+                    (("/bin/sh") (string-append "" (which "sh"))))
+                ) 
                 (list
                   "Makefile"
                   "bindist/bindist.Makefile"
