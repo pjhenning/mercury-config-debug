@@ -36,7 +36,8 @@
         (modify-phases %standard-phases
            (add-after 'unpack 'fix-hardcoded-paths
              (lambda _
-               (define hcp_files (list 
+               (let 
+                  ((hcp_files (list 
                                    "bindist/bindist.Makefile"
                                    "bindist/bindist.Makefile.in"
                                    "tests/benchmarks/Makefile.mercury"
@@ -45,25 +46,28 @@
                                    "boehm_gc/Makefile.dj"
                                    "boehm_gc/Makefile.direct"
                                    "boehm_gc/autogen.sh"
-                ))
-                (display hcp_files)
-                (define sh_path (which "sh"))
-                (for-each 
-                  (lambda hcp_file (
-                    (display hcp_file)
                   ))
-                  hcp_files
-                )
-                (for-each 
-                  (lambda (hcp_file) (
-                    (substitute* hcp_file
-                      (("/bin/sh") (string-append "" sh_path))
+                  (sh_path (which "sh"))
+                  )
+                  (
+                    (for-each 
+                      (lambda (hcp_file) (
+                        (display hcp_file)
+                      ))
+                      hcp_files
                     )
-                  )) 
-                  hcp_files
+                    #!(for-each 
+                      (lambda (hcp_file) (
+                        (substitute* hcp_file
+                          (("/bin/sh") (string-append "" sh_path))
+                        )
+                      )) 
+                      hcp_files
+                    )!#
+                    (substitute* "configure"
+                      (("export SHELL") (string-append "export CONFIG_SHELL=" sh_path "\nexport SHELL=" sh_path)))
+                  )
                 )
-                (substitute* "configure"
-                  (("export SHELL") (string-append "export CONFIG_SHELL=" sh_path "\nexport SHELL=" sh_path)))
              #t)
             )
         )
