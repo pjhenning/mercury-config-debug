@@ -31,7 +31,7 @@
       (list "readline" readline)
     ))
     (arguments `(
-      #:configure-flags (list "--disable-most-grades")
+      #:configure-flags (list "--disable-most-grades" (string-append "CONFIG_SHELL=" (which "sh")))
       #:phases
         (modify-phases %standard-phases
            (add-after 'unpack 'fix-hardcoded-paths
@@ -50,8 +50,6 @@
                  (("/bin/sh") (string-append "" (which "sh"))))
                (substitute* "boehm_gc/Makefile.direct"
                  (("/bin/sh") (string-append "" (which "sh"))))
-               (substitute* "configure"
-                 ('("export SHELL") (string-append "export SHELL=" (which "sh"))))
              #t)
             )
         )
