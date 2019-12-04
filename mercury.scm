@@ -31,25 +31,32 @@
       (list "readline" readline)
     ))
     (arguments `(
-      #:configure-flags (list "--disable-most-grades" (string-append "CONFIG_SHELL=" (which "sh")))
+      #:configure-flags (list "--disable-most-grades")
       #:phases
         (modify-phases %standard-phases
            (add-after 'unpack 'fix-hardcoded-paths
              (lambda _
-               (substitute* "bindist/bindist.Makefile"
-                 (("/bin/sh") (string-append "" (which "sh"))))
-               (substitute* "bindist/bindist.Makefile.in"
-                 (("/bin/sh") (string-append "" (which "sh"))))
-               (substitute* "tests/benchmarks/Makefile.mercury"
-                 (("/bin/sh") (string-append "" (which "sh"))))
-               (substitute* "scripts/Mmake.vars.in"
-                 (("/bin/sh") (string-append "" (which "sh"))))
-               (substitute* "boehm_gc/PCR-Makefile"
-                 (("/bin/sh") (string-append "" (which "sh"))))
-               (substitute* "boehm_gc/Makefile.dj"
-                 (("/bin/sh") (string-append "" (which "sh"))))
-               (substitute* "boehm_gc/Makefile.direct"
-                 (("/bin/sh") (string-append "" (which "sh"))))
+               (define hcp_files (list 
+                                   "bindist/bindist.Makefile"
+                                   "bindist/bindist.Makefile.in"
+                                   "tests/benchmarks/Makefile.mercury"
+                                   "scripts/Mmake.vars.in"
+                                   "boehm_gc/PCR-Makefile"
+                                   "boehm_gc/Makefile.dj"
+                                   "boehm_gc/Makefile.direct"
+                                   "boehm_gc/autogen.sh"
+                ))
+                (define sh_path (which "sh"))
+                (for-each 
+                  (lambda (hcp_file) (
+                    (substitute* hcp_file
+                      (("/bin/sh") (string-append "" (which "sh")))
+                    )
+                  )) 
+                  hcp_files
+                )
+                (substitute* "configure"
+                  (("export SHELL") (string-append "export CONFIG_SHELL=" sh_path "\nexport SHELL=" sh_path)))
              #t)
             )
         )
