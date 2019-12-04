@@ -36,24 +36,8 @@
         (modify-phases %standard-phases
            (add-after 'unpack 'fix-hardcoded-paths
              (lambda _
-               (let 
-                  (
-                    (hcp_files (list 
-                                   "bindist/bindist.Makefile"
-                                   "bindist/bindist.Makefile.in"
-                                   "tests/benchmarks/Makefile.mercury"
-                                   "scripts/Mmake.vars.in"
-                                   "boehm_gc/PCR-Makefile"
-                                   "boehm_gc/Makefile.dj"
-                                   "boehm_gc/Makefile.direct"
-                                   "boehm_gc/autogen.sh"
-                    ))
-                  )
-                  (
-                    (write "wow")
-                    (write hcp_files)
-                  )
-                )
+               (substitute* "configure"
+                  (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
              #t)
             )
         )
