@@ -37,7 +37,8 @@
            (add-after 'unpack 'fix-hardcoded-paths
              (lambda _
                (let 
-                  ((hcp_files (list 
+                  (
+                    (hcp_files (list 
                                    "bindist/bindist.Makefile"
                                    "bindist/bindist.Makefile.in"
                                    "tests/benchmarks/Makefile.mercury"
@@ -46,21 +47,11 @@
                                    "boehm_gc/Makefile.dj"
                                    "boehm_gc/Makefile.direct"
                                    "boehm_gc/autogen.sh"
-                  ))
-                  ;(sh_path (which "sh"))
+                    ))
                   )
                   (
                     (write "wow")
-                    #!(for-each 
-                      (lambda (hcp_file) (
-                        (substitute* hcp_file
-                          (("/bin/sh") (string-append "" sh_path))
-                        )
-                      )) 
-                      hcp_files
-                    )!#
-                    #!(substitute* "configure"
-                      (("export SHELL") (string-append "export CONFIG_SHELL=" sh_path "\nexport SHELL=" sh_path)))!#
+                    (write hcp_files)
                   )
                 )
              #t)
