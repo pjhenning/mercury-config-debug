@@ -47,10 +47,12 @@
                   "bindist/bindist.Makefile.in"
                   "tests/benchmarks/Makefile.mercury"
                   "scripts/Mmake.vars.in"
+                  "boehm_gc/configure"
                   "boehm_gc/PCR-Makefile"
                   "boehm_gc/Makefile.dj"
                   "boehm_gc/Makefile.direct"
                   "boehm_gc/autogen.sh"
+                  "boehm_gc/libatomic_ops/configure"
                 )
               )
               (substitute* "configure"
