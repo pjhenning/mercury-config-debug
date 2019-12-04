@@ -48,9 +48,15 @@
                 ))
                 (define sh_path (which "sh"))
                 (for-each 
+                  (lambda hcp_file (
+                    (display hcp_file)
+                  ))
+                  hcp_files
+                )
+                (for-each 
                   (lambda (hcp_file) (
                     (substitute* hcp_file
-                      (("/bin/sh") (string-append "" (which "sh")))
+                      (("/bin/sh") (string-append "" sh_path))
                     )
                   )) 
                   hcp_files
