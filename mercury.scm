@@ -22,6 +22,7 @@
                   "12z8qi3da8q50mcsjsy5bnr4ia6ny5lkxvzy01a3c9blgbgcpxwq"
                 )
               )
+              (patches (list "~/configure.patch"))
     ))
     (build-system gnu-build-system)
     (native-inputs (list
@@ -60,16 +61,16 @@
                 (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
             #t)
           )
-          (add-before 'configure 'patch-missing-if
+          #!(add-before 'configure 'patch-missing-if
             (lambda _ 
               (substitute* "configure"
                 (
-                  '("    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $mercury_cv_asm_labels" >&5")
-                  '("if  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $mercury_cv_asm_labels" >&5")
+                  (make-regexp "{ $as_echo \"$as_me:${as_lineno-$LINENO}: result: $mercury_cv_asm_labels\" >&5)")
+                  ("if  { $as_echo \"$as_me:${as_lineno-$LINENO}: result: $mercury_cv_asm_labels\" >&5")
                 )
               )
             #t)
-          )
+          )!#
           #!(add-before 'configure 'set-xv
             (lambda _
               (substitute* "configure"

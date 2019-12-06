@@ -1,0 +1,14 @@
+--- configure	2014-09-07 21:56:03.000000000 -0700
++++ configure	2019-12-05 18:11:53.000000000 -0800
+@@ -9306,6 +9306,11 @@
+         arm*-*)
+             CFLAGS_FOR_GOTOS="$CFLAGS_FOR_GOTOS -fomit-frame-pointer"
+             ;;
++        aarch64-*)
++            echo "gcc labels may not work on aarch64; skipping..." 1>&6
++            mercury_cv_asm_labels=no
++            mercury_cv_gcc_labels=no
++            ;;
+         # On hppa64, ia64 and powerpc64 the test programs appear to work, but
+         # larger programs die with an Illegal Instruction fault.
+         hppa64-*)
