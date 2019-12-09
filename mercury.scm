@@ -12,18 +12,19 @@
 (define-public mercury
   (package
     (name "mercury")
-    (version "rotd-2019-08-30")
+    (version "rotd-2019-12-04")
     (source (origin
               (method url-fetch)
               (uri (string-append "https://github.com/Mercury-Language/mercury-srcdist/archive/" version ".tar.gz"
               ))
               (sha256
                 (base32 
-                  "11lnsqspihw55vnbgpjxmxgwvhnsphkx7f56qnnnd6ax0by9alv2"
+                  "0n1ppc4jzjpr0z265h2vf0ad1f97475k9wxaasjffzm5svq6zb73"
                 )
               )
               (patches (list 
-                "/home/pine64/configure.patch"))
+                "/home/pine64/configure.patch"
+                "/home/pine64/mgnuc.in.patch"))
     ))
     (build-system gnu-build-system)
     (native-inputs (list
@@ -33,10 +34,11 @@
       (list "readline" readline)
     ))
     (arguments `(
-      #:configure-flags (list "--enable-libgrades=asm_fast.gc,reg.gc")
-      ;#:make-flags (list "PARALLEL=-j$NIX_BUILD_CORES")
+      ;#:configure-flags (list "--enable-libgrades=asm_fast.gc,reg.gc")
+      #:configure-flags (list "--enable-libgrades=none.gc")
       #:parallel-build? #f
-      #:make-flags (list "PARALLEL=-j4")
+      #:make-flags (list (string-append "PARALLEL=-j" (number->string (parallel-job-count))))
+      #:tests? #f
       #:phases
         (modify-phases %standard-phases
           (add-after 'unpack 'fix-hardcoded-paths
@@ -62,6 +64,33 @@
                 (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
               (substitute* "boehm_gc/libatomic_ops/configure"
                 (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
+              (for-each 
+                (lambda (hcp_file) 
+                  (substitute* hcp_file
+                    (("/bin/pwd") (string-append "" (which "pwd"))))
+                ) 
+                (list
+                  "Mmakefile"
+                  "scripts/prepare_install_dir.in"
+                )
+              )
+              (for-each 
+                (lambda (hcp_file) 
+                  (substitute* hcp_file
+                    (("/bin/pwd") (string-append "" "pwd")))
+                ) 
+                (list
+                  "tools/binary"
+                  "tools/binary_step"
+                  "tools/bootcheck"
+                  "tools/cvdd"
+                  "tools/linear"
+                  "tools/make_java_csharp_arena_base"
+                  "tools/make_java_csharp_arena_diff"
+                  "tools/speedtest"
+                  "tools/unary"
+                )
+              )
             #t)
           )
         )

@@ -1,0 +1,10 @@
+--- a/scripts/mgnuc.in	2019-12-09 01:43:41.000000000 -0800
++++ b/scripts/mgnuc.in	2019-12-09 01:43:57.000000000 -0800
+@@ -71,7 +71,6 @@
+         esac
+         DEBUG_OPT="-g"
+         DISABLE_OPTS_OPT="-O0"
+-        COMPILER_HALT_AT_WARN_OPT="-Werror"
+         COMPILER=gcc
+         ;;
+     clang*)
