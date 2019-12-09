@@ -12,17 +12,18 @@
 (define-public mercury
   (package
     (name "mercury")
-    (version "14.01.1")
+    (version "rotd-2019-08-30")
     (source (origin
               (method url-fetch)
-              (uri (string-append "http://dl.mercurylang.org/release/mercury-srcdist-" version ".tar.gz"
+              (uri (string-append "https://github.com/Mercury-Language/mercury-srcdist/archive/" version ".tar.gz"
               ))
               (sha256
                 (base32 
-                  "12z8qi3da8q50mcsjsy5bnr4ia6ny5lkxvzy01a3c9blgbgcpxwq"
+                  "11lnsqspihw55vnbgpjxmxgwvhnsphkx7f56qnnnd6ax0by9alv2"
                 )
               )
-              (patches (list "~/configure.patch"))
+              (patches (list 
+                "/home/pine64/configure.patch"))
     ))
     (build-system gnu-build-system)
     (native-inputs (list
@@ -32,8 +33,10 @@
       (list "readline" readline)
     ))
     (arguments `(
-      #:configure-flags (list "--enable-libgrades=asm_fast.gc")
+      #:configure-flags (list "--enable-libgrades=asm_fast.gc,reg.gc")
       ;#:make-flags (list "PARALLEL=-j$NIX_BUILD_CORES")
+      #:parallel-build? #f
+      #:make-flags (list "PARALLEL=-j4")
       #:phases
         (modify-phases %standard-phases
           (add-after 'unpack 'fix-hardcoded-paths
@@ -49,9 +52,7 @@
                   "bindist/bindist.Makefile.in"
                   "tests/benchmarks/Makefile.mercury"
                   "scripts/Mmake.vars.in"
-                  "boehm_gc/configure"
                   "boehm_gc/PCR-Makefile"
-                  "boehm_gc/Makefile.dj"
                   "boehm_gc/Makefile.direct"
                   "boehm_gc/autogen.sh"
                   "boehm_gc/libatomic_ops/configure"
@@ -59,28 +60,10 @@
               )
               (substitute* "configure"
                 (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
+              (substitute* "boehm_gc/libatomic_ops/configure"
+                (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
             #t)
           )
-          #!(add-before 'configure 'patch-missing-if
-            (lambda _ 
-              (substitute* "configure"
-                (
-                  (make-regexp "{ $as_echo \"$as_me:${as_lineno-$LINENO}: result: $mercury_cv_asm_labels\" >&5)")
-                  ("if  { $as_echo \"$as_me:${as_lineno-$LINENO}: result: $mercury_cv_asm_labels\" >&5")
-                )
-              )
-            #t)
-          )!#
-          #!(add-before 'configure 'set-xv
-            (lambda _
-              (substitute* "configure"
-                (
-                  ("# Be more Bourne compatible") 
-                  "set -xv\nlogfile=mcdb.log\nexec > $logfile 2>&1\n# Be more Bourne compatible"
-                )
-              )
-            #t)
-          )!#
         )
     ))
     (synopsis "The Mercury programming language")
