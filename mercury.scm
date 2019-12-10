@@ -35,7 +35,23 @@
     ))
     (arguments `(
       ;#:configure-flags (list "--enable-libgrades=asm_fast.gc,reg.gc")
-      #:configure-flags (list "--enable-libgrades=none.gc")
+      #:configure-flags 
+        '(
+          ,@(let 
+              ((system 
+                (or (%current-target-system) (%current-system))
+              ))
+              (cond 
+                ((string-prefix? "aarch64" system)
+                  ;; Limited testing has shown 'none.gc' to be 
+                  ;; one of the only grades certain to compile 
+                  ;; successfully on aarch64.
+                  '("--enable-libgrades=none.gc")
+                )
+                (else '())
+              )
+            )
+        )
       #:parallel-build? #f
       #:make-flags (list (string-append "PARALLEL=-j" (number->string (parallel-job-count))))
       #:tests? #f
