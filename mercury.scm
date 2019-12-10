@@ -23,8 +23,8 @@
                 )
               )
               (patches (list 
-                "/home/pine64/configure.patch"
-                "/home/pine64/mgnuc.in.patch"))
+                "./configure.patch"
+                "./mgnuc.in.patch"))
     ))
     (build-system gnu-build-system)
     (native-inputs (list
