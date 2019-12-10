@@ -22,9 +22,9 @@
                   "0n1ppc4jzjpr0z265h2vf0ad1f97475k9wxaasjffzm5svq6zb73"
                 )
               )
-              (patches (list 
-                "./configure.patch"
-                "./mgnuc.in.patch"))
+              (patches (search-patches 
+                "mercury-configure.patch"
+                "murcury-mgnuc.in.patch"))
     ))
     (build-system gnu-build-system)
     (native-inputs (list
