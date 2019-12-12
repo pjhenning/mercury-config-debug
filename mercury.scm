@@ -1,4 +1,4 @@
-(define-module (mercury)
+(define-module (gnu packages mercury)
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix build-system gnu)
@@ -8,34 +8,36 @@
   #:use-module (gnu packages flex)
   #:use-module (gnu packages texinfo)
   #:use-module (gnu packages readline)
+  #:use-module (gnu packages commencement)
 )
 
 (define-public mercury
   (package
     (name "mercury")
     (version "rotd-2019-12-04")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "https://github.com/Mercury-Language/mercury-srcdist/archive/" version ".tar.gz"
-              ))
-              (sha256
-                (base32 
-                  "0n1ppc4jzjpr0z265h2vf0ad1f97475k9wxaasjffzm5svq6zb73"
-                )
-              )
-              (patches (search-patches 
-                "mercury-configure.patch"
-                "murcury-mgnuc.in.patch"))
-    ))
+    (source 
+      (origin
+        (method url-fetch)
+        (uri (string-append "https://github.com/Mercury-Language/mercury-srcdist/archive/" version ".tar.gz"))
+        (sha256 (base32 "0n1ppc4jzjpr0z265h2vf0ad1f97475k9wxaasjffzm5svq6zb73"))
+        (patches (search-patches "mercury-configure.patch" "mercury-mgnuc.in.patch"))
+      )
+    )
     (build-system gnu-build-system)
-    (native-inputs (list
-      (list "bison" bison)
-      (list "flex" flex)
-      (list "texinfo" texinfo)
-      (list "readline" readline)
-    ))
+    (native-inputs 
+      (list
+        (list "bison" bison)
+        (list "flex" flex)
+        (list "texinfo" texinfo)
+        (list "readline" readline)
+      )
+    )
+    (propagated-inputs
+      (list
+        (list "gcc-toolchain" gcc-toolchain)
+      )
+    )
     (arguments `(
-      ;#:configure-flags (list "--enable-libgrades=asm_fast.gc,reg.gc")
       #:configure-flags 
         '(
           ,@(let 
@@ -63,7 +65,8 @@
               (for-each 
                 (lambda (hcp_file) 
                   (substitute* hcp_file
-                    (("/bin/sh") (string-append "" (which "sh"))))
+                    (("/bin/sh") (which "sh"))
+                  )
                 ) 
                 (list
                   "Makefile"
@@ -78,13 +81,16 @@
                 )
               )
               (substitute* "configure"
-                (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
+                (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh")))
+              )
               (substitute* "boehm_gc/libatomic_ops/configure"
-                (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh"))))
+                (("export SHELL") (string-append "export CONFIG_SHELL=" (which "sh") "\nexport SHELL=" (which "sh")))
+              )
               (for-each 
                 (lambda (hcp_file) 
                   (substitute* hcp_file
-                    (("/bin/pwd") (string-append "" (which "pwd"))))
+                    (("/bin/pwd") (which "pwd"))
+                  )
                 ) 
                 (list
                   "Mmakefile"
@@ -94,7 +100,8 @@
               (for-each 
                 (lambda (hcp_file) 
                   (substitute* hcp_file
-                    (("/bin/pwd") (string-append "" "pwd")))
+                    (("/bin/pwd") "pwd")
+                  )
                 ) 
                 (list
                   "tools/binary"
@@ -117,7 +124,6 @@
       "Mercury is a logic/functional programming language which combines the clarity and expressiveness of declarative programming with advanced static analysis and error detection features. \n\nIts highly optimized execution algorithm delivers efficiency far in excess of existing logic programming systems, and close to conventional programming systems. Mercury addresses the problems of large-scale program development, allowing modularity, separate compilation, and numerous optimization/time trade-offs."
     )
     (home-page "http://www.mercurylang.org/index.html")
-    (license gpl3+)
+    (license gpl2)
   )
 )
-mercury
